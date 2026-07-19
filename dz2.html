@@ -4,134 +4,262 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f7f5f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .form-container { background-color: #fcf8f2; border: 1px solid #e6dfd3; padding: 20px; width: 350px; box-shadow: 0 0 10px rgba(0,0,0,0.05); display: none; }
+        .info-container { background-color: #fcf8f2; border: 1px solid #e6dfd3; padding: 20px; width: 500px; box-shadow: 0 0 10px rgba(0,0,0,0.05); display: none; }
+        h2, h3 { text-align: center; margin-top: 0; color: #333; }
+        .form-group { margin-bottom: 15px; position: relative; display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px; }
+        .error-msg { position: absolute; right: 0; top: 0; color: #a94442; font-size: 12px; font-weight: bold; display: none; }
+        input[type="text"], input[type="password"], select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #e0e0e0; border: 1px solid #adadad; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #d4d4d4; }
+        .header-line { display: flex; justify-content: flex-end; align-items: center; font-size: 12px; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px; }
+        .header-line a { color: blue; text-decoration: underline; cursor: pointer; margin-left: 5px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .error { color: red; font-size: 11px; margin-top: 2px; display: none; }
+        .btn-container { grid-column: span 2; display: flex; justify-content: center; margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <script>
-class Button {
-    constructor(width, height, text) {
-        this.width = width;
-        this.height = height;
-        this.text = text;
+
+<div id="registrationPage" class="form-container">
+    <h2>Registration</h2>
+    <form id="regForm" novalidate>
+        <div class="form-group">
+            <label for="email">Email: <span id="emailError" class="error-msg">Wrong email address</span></label>
+            <input type="text" id="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password: <span id="passwordError" class="error-msg">Wrong password</span></label>
+            <input type="password" id="password">
+        </div>
+        <div class="form-group">
+            <label for="repeat">Repeat: <span id="repeatError" class="error-msg">Passwords must match</span></label>
+            <input type="password" id="repeat">
+        </div>
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+<div id="infoPage" class="info-container">
+    <div class="header-line">
+        Hello, <span id="userGreeting"></span>! <a id="exitBtn">exit</a>
+    </div>
+    <h3>User info</h3>
+    <form id="infoForm" novalidate>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName">
+                <span id="firstNameError" class="error">Обов'язкове поле, тільки літери, макс 20</span>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName">
+                <span id="lastNameError" class="error">Обов'язкове поле, тільки літери, макс 20</span>
+            </div>
+            <div class="form-group">
+                <label for="birthYear">Year of birth:</label>
+                <input type="text" id="birthYear">
+                <span id="birthYearError" class="error">Від 1900 до поточного</span>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                </select>
+                <span id="genderError" class="error">Обов'язкове поле</span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone number:</label>
+                <input type="text" id="phone">
+                <span id="phoneError" class="error">10-12 цифр (цифри, пробіл, (), -)</span>
+            </div>
+            <div class="form-group">
+                <label for="skype">Skype:</label>
+                <input type="text" id="skype">
+                <span id="skypeError" class="error">Літери, цифри, дефіс, крапка</span>
+            </div>
+            <div class="btn-container">
+                <button type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 
-    showBtn() {
-        document.write(`<button>${this.text}</button>`);
-    }
-}
+    let fields = ['firstName', 'lastName', 'birthYear', 'gender', 'phone', 'skype'];
 
-class BootstrapButton extends Button {
-    constructor(width, height, text, color) {
-        super(width, height, text);
-        this.color = color;
-    }
-
-    showBtn() {
-        document.write(`<button style="width: ${this.width}; height: ${this.height}; background-color: ${this.color}; border: none; border-radius: 4px; color: white; cursor: pointer;">${this.text}</button>`);
-    }
-}
-
-const plainButton = new Button("100px", "40px", "Plain");
-plainButton.showBtn();
-
-const bootstrapBtn = new BootstrapButton("150px", "45px", "Bootstrap Success", "green");
-bootstrapBtn.showBtn();
-
-
-class Shape {
-    constructor(name) {
-        this._name = name;
+    function route() {
+        let email = getCookie('user_email');
+        if (email) {
+            document.getElementById('registrationPage').style.display = 'none';
+            document.getElementById('infoPage').style.display = 'block';
+            document.getElementById('userGreeting').textContent = email;
+            
+            fields.forEach(function(field) {
+                let savedVal = getCookie('info_' + field);
+                if (savedVal !== undefined) {
+                    document.getElementById(field).value = savedVal;
+                }
+            });
+        } else {
+            document.getElementById('infoPage').style.display = 'none';
+            document.getElementById('registrationPage').style.display = 'block';
+        }
     }
 
-    get name() {
-        return this._name;
-    }
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let email = document.getElementById('email').value.trim();
+        let password = document.getElementById('password').value;
+        let repeat = document.getElementById('repeat').value;
+        
+        let emailErr = document.getElementById('emailError');
+        let passErr = document.getElementById('passwordError');
+        let repErr = document.getElementById('repeatError');
+        
+        emailErr.style.display = 'none';
+        passErr.style.display = 'none';
+        repErr.style.display = 'none';
+        
+        let isValid = true;
+        
+        let emailParts = email.split('@');
+        if (emailParts.length !== 2 || emailParts[0].length < 3 || emailParts[1].length === 0) {
+            isValid = false;
+            emailErr.style.display = 'block';
+        } else {
+            let localPart = emailParts[0];
+            let emailRegex = /^[a-zA-Z0-9._-]+$/;
+            if (!emailRegex.test(localPart)) {
+                isValid = false;
+                emailErr.style.display = 'block';
+            }
+        }
+        
+        let hasLower = /[a-z]/.test(password);
+        let hasUpper = /[A-Z]/.test(password);
+        let hasDigit = /[0-9]/.test(password);
+        if (password.length < 6 || !hasLower || !hasUpper || !hasDigit) {
+            isValid = false;
+            passErr.style.display = 'block';
+        }
+        
+        if (repeat === '' || password !== repeat) {
+            isValid = false;
+            repErr.style.display = 'block';
+        }
+        
+        if (isValid) {
+            let d = new Date();
+            d.setTime(d.getTime() + (60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "user_email=" + encodeURIComponent(email) + ";" + expires + ";path=/";
+            route();
+        }
+    });
 
-    printInfo() {
-        document.write(`<p>Фігура: ${this.name}</p>`);
-    }
+    document.getElementById('exitBtn').addEventListener('click', function() {
+        let d = new Date();
+        d.setTime(d.getTime() - 1000);
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = "user_email=;" + expires + ";path=/";
+        fields.forEach(function(field) {
+            document.cookie = "info_" + field + "=;" + expires + ";path=/";
+            document.getElementById(field).value = '';
+        });
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('repeat').value = '';
+        route();
+    });
 
-    getArea() {
-        return 0;
-    }
+    document.getElementById('infoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let firstName = document.getElementById('firstName').value.trim();
+        let lastName = document.getElementById('lastName').value.trim();
+        let birthYear = document.getElementById('birthYear').value.trim();
+        let gender = document.getElementById('gender').value;
+        let phone = document.getElementById('phone').value.trim();
+        let skype = document.getElementById('skype').value.trim();
+        
+        let isValid = true;
+        
+        fields.forEach(function(field) {
+            document.getElementById(field + 'Error').style.display = 'none';
+        });
+        
+        let nameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ]+$/;
+        if (firstName === '' || firstName.length > 20 || !nameRegex.test(firstName)) {
+            isValid = false;
+            document.getElementById('firstNameError').style.display = 'block';
+        }
+        
+        if (lastName === '' || lastName.length > 20 || !nameRegex.test(lastName)) {
+            isValid = false;
+            document.getElementById('lastNameError').style.display = 'block';
+        }
+        
+        let currentYear = new Date().getFullYear();
+        let yearNum = parseInt(birthYear, 10);
+        if (birthYear === '' || isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear) {
+            isValid = false;
+            document.getElementById('birthYearError').style.display = 'block';
+        }
+        
+        if (gender === '') {
+            isValid = false;
+            document.getElementById('genderError').style.display = 'block';
+        }
+        
+        if (phone !== '') {
+            let allowedChars = /^[0-9\s()+-]+$/;
+            if (!allowedChars.test(phone)) {
+                isValid = false;
+                document.getElementById('phoneError').style.display = 'block';
+            } else {
+                let digitsOnly = phone.replace(/\D/g, '');
+                if (digitsOnly.length < 10 || digitsOnly.length > 12) {
+                    isValid = false;
+                    document.getElementById('phoneError').style.display = 'block';
+                }
+            }
+        }
+        
+        if (skype !== '') {
+            let skypeRegex = /^[a-zA-Z0-9.-]+$/;
+            if (!skypeRegex.test(skype)) {
+                isValid = false;
+                document.getElementById('skypeError').style.display = 'block';
+            }
+        }
+        
+        if (isValid) {
+            let d = new Date();
+            d.setTime(d.getTime() + (60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            
+            document.cookie = "info_firstName=" + encodeURIComponent(firstName) + ";" + expires + ";path=/";
+            document.cookie = "info_lastName=" + encodeURIComponent(lastName) + ";" + expires + ";path=/";
+            document.cookie = "info_birthYear=" + encodeURIComponent(birthYear) + ";" + expires + ";path=/";
+            document.cookie = "info_gender=" + encodeURIComponent(gender) + ";" + expires + ";path=/";
+            document.cookie = "info_phone=" + encodeURIComponent(phone) + ";" + expires + ";path=/";
+            document.cookie = "info_skype=" + encodeURIComponent(skype) + ";" + expires + ";path=/";
+        }
+    });
 
-    getPerimeter() {
-        return 0;
-    }
-}
-
-class Square extends Shape {
-    constructor(side) {
-        super("Квадрат");
-        this.side = side;
-    }
-
-    printInfo() {
-        document.write(`<p>Фігура: ${this.name}, Сторона: ${this.side}</p>`);
-    }
-
-    getArea() {
-        return this.side ** 2;
-    }
-
-    getPerimeter() {
-        return this.side * 4;
-    }
-}
-
-class Rectangle extends Shape {
-    constructor(width, height) {
-        super("Прямокутник");
-        this.width = width;
-        this.height = height;
-    }
-
-    printInfo() {
-        document.write(`<p>Фігура: ${this.name}, Сторони: ${this.width}, ${this.height}</p>`);
-    }
-
-    getArea() {
-        return this.width * this.height;
-    }
-
-    getPerimeter() {
-        return (this.width + this.height) * 2;
-    }
-}
-
-class Triangle extends Shape {
-    constructor(a, b, c) {
-        super("Трикутник");
-        this.a = a;
-        this.b = b;
-        this.c = c;
-    }
-
-    printInfo() {
-        document.write(`<p>Фігура: ${this.name}, Сторони: ${this.a}, ${this.b}, ${this.c}</p>`);
-    }
-
-    getArea() {
-        const p = this.getPerimeter() / 2;
-        return Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
-    }
-
-    getPerimeter() {
-        return this.a + this.b + this.c;
-    }
-}
-
-const shapes = [
-    new Square(5),
-    new Rectangle(4, 8),
-    new Triangle(3, 4, 5)
-];
-
-for (let shape of shapes) {
-    shape.printInfo();
-    document.write(`<p>Площа: ${shape.getArea().toFixed(2)}</p>`);
-    document.write(`<p>Периметр: ${shape.getPerimeter().toFixed(2)}</p>`);
-    document.write("<hr>");
-}
-    </script>
+    route();
+</script>
 </body>
 </html>
