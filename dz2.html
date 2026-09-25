@@ -1,59 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
 </head>
-
 <body>
 
+
   <script>
-    function multiplyAsync(a, b) {
-      return new Promise((resolve, reject) => {
+
+    function task1() {
+      return new Promise((resolve) => {
         setTimeout(() => {
-          if (typeof a !== 'number' || typeof b !== 'number' || isNaN(a) || isNaN(b)) {
-            reject(new Error("Некоректні значення"));
-          } else {
-            resolve(a * b);
-          }
+          resolve("Task 1 завершено");
+        }, 1000);
+      });
+    }
+
+    function task2() {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("Task 2 завершено");
         }, 2000);
       });
     }
-    function sortArrayAsync(array) {
-      return new Promise((resolve, reject) => {
+
+    function task3() {
+      return new Promise((resolve) => {
         setTimeout(() => {
-          if (!Array.isArray(array) || array.length === 0) {
-            reject(new Error("Масив порожній"));
-          } else {
-            const sortedArray = [...array].sort((a, b) => a - b);
-            resolve(sortedArray);
-          }
-        }, 2000);
+          resolve("Task 3 завершено");
+        }, 3000);
       });
     }
+
+    async function executeTasks() {
+      const res1 = await task1();
+      console.log(res1);
+
+      const res2 = await task2();
+      console.log(res2);
+
+      const res3 = await task3();
+      console.log(res3);
+    }
+
+
+
+
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function sumArrayAsync(array) {
+      if (!Array.isArray(array) || array.length === 0) {
+        throw new Error("Масив порожній");
+      }
+
+      let sum = 0;
+      for (const num of array) {
+        await delay(1000); 
+        sum += num;
+      }
+
+      return sum;
+    }
+
+
+
     async function main() {
-      console.log("--- Завдання 1 ---");
+      console.log("--- Завдання 1: Старт ---");
+      await executeTasks();
+      console.log("Усі завдання завершено");
+
+      console.log("\n--- Завдання 2: Обчислення суми ---");
       try {
-        const result = await multiplyAsync(6, 9);
-        console.log("Результат множення:", result);
+        const numbers = [5, 10, 15];
+        console.log(`Рахуємо суму масиву [${numbers.join(', ')}]...`);
+        
+        const totalSum = await sumArrayAsync(numbers);
+        console.log("Результат суми:", totalSum);
       } catch (error) {
         console.error("Помилка:", error.message);
       }
 
-      console.log("\n--- Завдання 2 ---");
       try {
-        const numbers = [42, 7, 19, 3, 88, 1];
-        const sorted = await sortArrayAsync(numbers);
-        console.log("Відсортований масив:", sorted);
+        await sumArrayAsync([]);
       } catch (error) {
-        console.error("Помилка:", error.message);
+        console.error("Перевірка порожнього масиву:", error.message);
       }
     }
 
     main();
   </script>
 </body>
-
 </html>
